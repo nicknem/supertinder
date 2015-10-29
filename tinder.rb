@@ -34,6 +34,7 @@ while true
   recs_request = Net::HTTP::Get.new(uri.path, initheader = headers)
   recs_result = https.request(recs_request)
   bitches = JSON.parse(recs_result.body)
+  puts recs_result.body
 
   # loop through all the bitches and like them
   bitches['results'].each do |bitch|

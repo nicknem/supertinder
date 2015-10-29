@@ -4,10 +4,16 @@ require 'json'
 require 'uri'
 base_uri = "https://api.gotinder.com/"
 
+puts '==== TINDER ===='
+puts 'logging into Facebook...'
+
 # facebook tokens
 facebook_token = 'CAAGm0PX4ZCpsBAHPjhcayVBHW7QFU5fnSkyVKoGq1kVPtB5LNp4kCNosBCTwmRLFXznK59aLeNTruLQutwwzY39M7gcucqGi8l5naWq8IUbCGxd91TgEqOc0lDwFTQJZATElinruyxCZAO3AldvXX28MVfI9VnfLesDl2wC7Wpsb32KIhg9ozpRlfJBgO6BJVZBQkY2XHsgyB7ZBa3G4ZCE5yBvqLDA4kZBZCeDD3CVfiQZDZD' #get this from the api explorer or something
 facebook_id = '1069585657' #your numerical facebook id
 login_credentials = {'facebook_token' => facebook_token, 'facebook_id' => facebook_id}
+
+puts '==== TINDER ===='
+puts 'Connecting to the Tinder API...'
 
 # authenticate to Tinder
 auth_uri = URI(base_uri + 'auth')
@@ -28,6 +34,8 @@ headers = {'User-Agent' => 'Tinder/4.6.1 (iPhone; iOS 9.1; Scale/2.00)',
 
 # AUTOLIKER
 
+puts 'All the bitches in the club now put your hands up...'
+
 # Get a list of the bitches
 while true
   uri = URI.parse(base_uri + "user/recs")
@@ -38,6 +46,7 @@ while true
   bitches = JSON.parse(recs_result.body)
 
   # loop through all the bitches and like them
+  puts '======== LIKING... ========='
   bitches['results'].each do |bitch|
     _id = bitch['_id']
     name = bitch['name']
@@ -47,7 +56,7 @@ while true
     like_request = Net::HTTP::Get.new(uri.path, initheader = headers)
     like_result = https.request(like_request)
     puts _id + " " + name + " " + like_result.body
-    sleep 1
+    sleep 0.5
   end
 end
 

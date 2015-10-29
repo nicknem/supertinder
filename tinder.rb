@@ -44,7 +44,7 @@ while true
     https.use_ssl = true
     like_request = Net::HTTP::Get.new(uri.path, initheader = headers)
     like_result = https.request(like_request)
-    puts like_result.body
+    puts _id + " " + name + " " + like_result.body
   end
 end
 

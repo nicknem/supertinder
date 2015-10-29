@@ -26,15 +26,16 @@ headers = {'User-Agent' => 'Tinder/4.6.1 (iPhone; iOS 9.1; Scale/2.00)',
            'Content-Type' => 'application/json',
            'X-Auth-Token' => x_auth_token }
 
+# AUTOLIKER
+
+# Get a list of the bitches
 while true
-  # Get a list of the bitches
   uri = URI.parse(base_uri + "user/recs")
   https = Net::HTTP.new(uri.host, uri.port)
   https.use_ssl = true
   recs_request = Net::HTTP::Get.new(uri.path, initheader = headers)
   recs_result = https.request(recs_request)
   bitches = JSON.parse(recs_result.body)
-  puts recs_result.body
 
   # loop through all the bitches and like them
   bitches['results'].each do |bitch|
@@ -46,8 +47,28 @@ while true
     like_request = Net::HTTP::Get.new(uri.path, initheader = headers)
     like_result = https.request(like_request)
     puts _id + " " + name + " " + like_result.body
+    sleep 1
   end
 end
+
+# MESSENGER
+
+# # Get all the matches
+# uri = URI.parse(base_uri + "user/matches/")
+# https = Net::HTTP.new(uri.host, uri.port)
+# https.use_ssl = true
+# matches_request = Net::HTTP::Get.new(uri.path, initheader = headers)
+# matches_result = https.request(matches_request)
+# matches = JSON.parse(matches_result.body)
+# puts matches
+
+  # Get the ones that have blank message history
+  # Send first message
+  # if answer
+    # send second message
+  # else
+    # wait one day
+    # send second message
 
 
 # # POST call to modify profile

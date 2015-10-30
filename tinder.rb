@@ -18,7 +18,7 @@ else
       name varchar(30),
       bio text,
       birth_date integer,
-      profile_pics text
+      profile_pics blob
     );
   SQL
 end
@@ -51,8 +51,7 @@ headers = {'User-Agent' => 'Tinder/4.6.1 (iPhone; iOS 9.1; Scale/2.00)',
 # AUTOLIKER
 puts 'All the bitches in the club now put your hands up...'
 # Get a list of the bitches
-count = 0
-while count < 1 do
+while true
   uri = URI.parse(base_uri + "user/recs")
   https = Net::HTTP.new(uri.host, uri.port)
   https.use_ssl = true
@@ -67,7 +66,7 @@ while count < 1 do
     name = bitch['name']
     bio = bitch['bio']
     birth_date = bitch['birth_date']
-    profile_pics = bitch['photos'][0]['processedFiles']['url']
+    profile_pics = bitch['photos'][0]['processedFiles'][0]['url']
     uri = URI.parse(base_uri + "like/" + _id)
     https = Net::HTTP.new(uri.host, uri.port)
     https.use_ssl = true
@@ -80,7 +79,6 @@ while count < 1 do
             VALUES (?, ?, ?, ?, ?)", [_id, name, bio, birth_date, profile_pics])
     sleep 0.5
   end
-  count += 1
 end
 
 # MESSENGER

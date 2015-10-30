@@ -6,17 +6,15 @@ require 'uri'
 
 base_uri = "https://api.gotinder.com/"
 
-puts '==== TINDER ===='
-puts 'logging into Facebook...'
+puts '==== SuperDater ===='
+puts 'Asking permission to Zuck to make the world a better place...'
 
 # facebook tokens
 facebook_token = 'CAAGm0PX4ZCpsBAHPjhcayVBHW7QFU5fnSkyVKoGq1kVPtB5LNp4kCNosBCTwmRLFXznK59aLeNTruLQutwwzY39M7gcucqGi8l5naWq8IUbCGxd91TgEqOc0lDwFTQJZATElinruyxCZAO3AldvXX28MVfI9VnfLesDl2wC7Wpsb32KIhg9ozpRlfJBgO6BJVZBQkY2XHsgyB7ZBa3G4ZCE5yBvqLDA4kZBZCeDD3CVfiQZDZD' #get this from the api explorer or something
 facebook_id = '1069585657' #your numerical facebook id
 login_credentials = {'facebook_token' => facebook_token, 'facebook_id' => facebook_id}
 
-puts '==== TINDER ===='
-puts 'Connecting to the Tinder API...'
-
+puts 'Fetching the bitches...'
 # authenticate to Tinder
 auth_uri = URI(base_uri + 'auth')
 response = Net::HTTP.post_form(
@@ -43,7 +41,6 @@ while true
   recs_request = Net::HTTP::Get.new(uri.path, initheader = headers)
   recs_result = https.request(recs_request)
   bitches = JSON.parse(recs_result.body)
-
   # loop through all the bitches and like them
   puts '======== LIKING... ========='
   bitches['results'].each do |bitch|

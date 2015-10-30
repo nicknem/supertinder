@@ -5,7 +5,6 @@ require 'json'
 require 'uri'
 
 base_uri = "https://api.gotinder.com/"
-
 #Check if bitches.db exists
 if File.exists?('bitches.db')
   # if it exists, open it
@@ -15,8 +14,11 @@ else
   db = SQLite3::Database.new "bitches.db"
   rows = db.execute <<-SQL
     create table bitches (
-      tinder_id int,
-      name varchar(30)
+      tinder_id integer,
+      name varchar(30),
+      bio text,
+      birth_date integer,
+      profile_pics blob
     );
   SQL
 end
@@ -56,11 +58,15 @@ while true
   recs_request = Net::HTTP::Get.new(uri.path, initheader = headers)
   recs_result = https.request(recs_request)
   bitches = JSON.parse(recs_result.body)
-  # loop through all the bitches and like them
+
+  # Loop through all the bitches and like them
   puts '======== LIKING... ========='
   bitches['results'].each do |bitch|
     _id = bitch['_id']
     name = bitch['name']
+    bio = bitch['bio']
+    birth_date = bitch['birth_date']
+    profile_pics = bitch['photos'][0]['processedFiles'][0]['url']
     uri = URI.parse(base_uri + "like/" + _id)
     https = Net::HTTP.new(uri.host, uri.port)
     https.use_ssl = true
@@ -69,8 +75,8 @@ while true
     puts _id + " " + name + " " + like_result.body
 
     # Execute inserts with parameter markers
-    db.execute("INSERT INTO bitches (tinder_id, Name)
-            VALUES (?, ?)", [_id, name])
+    db.execute("INSERT INTO bitches (tinder_id, name, bio, birth_date, profile_pics)
+            VALUES (?, ?, ?, ?, ?)", [_id, name, bio, birth_date, profile_pics])
     sleep 0.5
   end
 end
@@ -100,7 +106,7 @@ end
 # https.use_ssl = true
 # profile_request = Net::HTTP::Post.new(uri.path, initheader = headers)
 # profile_request.body = {
-#   "age_filter_min" => 26,
+#   "age_filter_min" => 18,
 #   "gender" => 0,
 #   "age_filter_max" => 32,
 #   "distance_filter" => 14

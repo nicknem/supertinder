@@ -6,6 +6,21 @@ require 'uri'
 
 base_uri = "https://api.gotinder.com/"
 
+#Check if bitches.db exists
+if File.exists?('bitches.db')
+  # if it exists, open it
+  db = SQLite3::Database.open "bitches.db"
+else
+  # Create a bitches database
+  db = SQLite3::Database.new "bitches.db"
+  rows = db.execute <<-SQL
+    create table bitches (
+      tinder_id int,
+      name varchar(30)
+    );
+  SQL
+end
+
 puts '==== SuperDater ===='
 puts 'Asking permission to Zuck to make the world a better place...'
 
@@ -52,6 +67,10 @@ while true
     like_request = Net::HTTP::Get.new(uri.path, initheader = headers)
     like_result = https.request(like_request)
     puts _id + " " + name + " " + like_result.body
+
+    # Execute inserts with parameter markers
+    db.execute("INSERT INTO bitches (tinder_id, Name)
+            VALUES (?, ?)", [_id, name])
     sleep 0.5
   end
 end

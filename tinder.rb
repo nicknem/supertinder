@@ -1,7 +1,9 @@
+require 'sqlite3'
 require 'net/http'
 require 'net/https'
 require 'json'
 require 'uri'
+
 base_uri = "https://api.gotinder.com/"
 
 puts '==== TINDER ===='
@@ -31,11 +33,8 @@ x_auth_token = response_hash["token"]
 headers = {'User-Agent' => 'Tinder/4.6.1 (iPhone; iOS 9.1; Scale/2.00)',
            'Content-Type' => 'application/json',
            'X-Auth-Token' => x_auth_token }
-
 # AUTOLIKER
-
 puts 'All the bitches in the club now put your hands up...'
-
 # Get a list of the bitches
 while true
   uri = URI.parse(base_uri + "user/recs")
@@ -78,7 +77,6 @@ end
   # else
     # wait one day
     # send second message
-
 
 # # POST call to modify profile
 # uri = URI.parse(base_uri + "profile")

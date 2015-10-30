@@ -5,17 +5,21 @@ require 'json'
 require 'uri'
 
 base_uri = "https://api.gotinder.com/"
-# Open a database
-db = SQLite3::Database.new "test.db"
 
-# Create a database
-rows = db.execute <<-SQL
-  create table bitches (
-    tinder_id int
-    name varchar(30),
-    val int
-  );
-SQL
+#Check if bitches.db exists
+if File.exists?('bitches.db')
+  # if it exists, open it
+  db = SQLite3::Database.open "bitches.db"
+else
+  # Create a bitches database
+  db = SQLite3::Database.new "bitches.db"
+  rows = db.execute <<-SQL
+    create table bitches (
+      tinder_id int,
+      name varchar(30)
+    );
+  SQL
+end
 
 puts '==== SuperDater ===='
 puts 'Asking permission to Zuck to make the world a better place...'
@@ -65,8 +69,8 @@ while true
     puts _id + " " + name + " " + like_result.body
 
     # Execute inserts with parameter markers
-    db.execute("INSERT INTO students (name, email, grade, blog)
-            VALUES (?, ?, ?, ?)", [@name, @email, @grade, @blog])
+    db.execute("INSERT INTO bitches (tinder_id, Name)
+            VALUES (?, ?)", [_id, name])
     sleep 0.5
   end
 end

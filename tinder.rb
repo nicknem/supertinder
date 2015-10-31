@@ -4,11 +4,6 @@ require 'net/https'
 require 'json'
 require 'uri'
 
-# YOU NEED TO PROVIDE YOUR FACEBOOK LOGIN AND PASSWORD FOR THIS SCRIPT TO WORK
-
-# facebook_email =
-# facebook_password =
-
 base_uri = "https://api.gotinder.com/"
 
 #Check if bitches.db exists
@@ -28,7 +23,6 @@ else
     );
   SQL
 end
-
 
 puts '==== SuperDater ===='
 puts 'Asking permission to Zuck to make the world a better place...'
@@ -93,25 +87,6 @@ while true
     sleep 0.5
   end
 end
-
-# MESSENGER
-
-# # Get all the matches
-# uri = URI.parse(base_uri + "user/matches/")
-# https = Net::HTTP.new(uri.host, uri.port)
-# https.use_ssl = true
-# matches_request = Net::HTTP::Get.new(uri.path, initheader = headers)
-# matches_result = https.request(matches_request)
-# matches = JSON.parse(matches_result.body)
-# puts matches
-
-  # Get the ones that have blank message history
-  # Send first message
-  # if answer
-    # send second message
-  # else
-    # wait one day
-    # send second message
 
 # # POST call to modify profile
 # uri = URI.parse(base_uri + "profile")

@@ -4,7 +4,13 @@ require 'net/https'
 require 'json'
 require 'uri'
 
+# YOU NEED TO PROVIDE YOUR FACEBOOK LOGIN AND PASSWORD FOR THIS SCRIPT TO WORK
+
+# facebook_email =
+# facebook_password =
+
 base_uri = "https://api.gotinder.com/"
+
 #Check if bitches.db exists
 if File.exists?('bitches.db')
   # if it exists, open it
@@ -23,6 +29,7 @@ else
   SQL
 end
 
+
 puts '==== SuperDater ===='
 puts 'Asking permission to Zuck to make the world a better place...'
 
@@ -31,25 +38,31 @@ facebook_token = 'CAAGm0PX4ZCpsBAHPjhcayVBHW7QFU5fnSkyVKoGq1kVPtB5LNp4kCNosBCTwm
 facebook_id = '1069585657' #your numerical facebook id
 login_credentials = {'facebook_token' => facebook_token, 'facebook_id' => facebook_id}
 
-puts 'Fetching the bitches...'
-# authenticate to Tinder
-auth_uri = URI(base_uri + 'auth')
-response = Net::HTTP.post_form(
-  auth_uri,
-  'locale' => 'fr-FR',
-  'facebook_token' => facebook_token,
-  'facebook_id' => facebook_id,
-  )
-# get the tinder token by parsing the response body
-response_hash = JSON.parse(response.body)
-x_auth_token = response_hash["token"]
+puts 'Hoes before bros...'
 
+# Authenticate to Tinder and return the Tinder token
+def tinder_auth(fb_token, fb_id)
+  # authenticate to Tinder
+  auth_uri = URI("https://api.gotinder.com/auth")
+  response = Net::HTTP.post_form(
+    auth_uri,
+    'locale' => 'fr-FR',
+    'facebook_token' => fb_token,
+    'facebook_id' => fb_id,
+    )
+  # get the tinder token and return it
+  response_hash = JSON.parse(response.body)
+  x_auth_token = response_hash["token"]
+  x_auth_token
+end
+
+x_auth_token = tinder_auth(facebook_token, facebook_id)
 # requests headers
 headers = {'User-Agent' => 'Tinder/4.6.1 (iPhone; iOS 9.1; Scale/2.00)',
            'Content-Type' => 'application/json',
            'X-Auth-Token' => x_auth_token }
 # AUTOLIKER
-puts 'All the bitches in the club now put your hands up...'
+puts 'I got 99 problems but the bitches no longer are one...'
 # Get a list of the bitches
 while true
   uri = URI.parse(base_uri + "user/recs")
@@ -60,7 +73,7 @@ while true
   bitches = JSON.parse(recs_result.body)
 
   # Loop through all the bitches and like them
-  puts '======== LIKING... ========='
+  puts '======== DICKSLAPPING BITCHES ========='
   bitches['results'].each do |bitch|
     _id = bitch['_id']
     name = bitch['name']

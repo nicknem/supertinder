@@ -29,9 +29,9 @@ def open_database
 end
 
 # Authenticate to Tinder and return the Tinder token
-def tinder_auth(fb_token, fb_id)
+def tinder_auth(fb_token, fb_id, base_uri)
   # authenticate to Tinder
-  auth_uri = URI("https://api.gotinder.com/auth")
+  auth_uri = URI.parse(base_uri + "auth")
   response = Net::HTTP.post_form(
     auth_uri,
     'locale' => 'fr-FR',
@@ -44,15 +44,20 @@ def tinder_auth(fb_token, fb_id)
   x_auth_token
 end
 
-# Get a list of the bitches
-def list_bitches(base_uri, headers)
-  uri = URI.parse(base_uri + "user/recs")
+
+def get_call(uri, headers)
   https = Net::HTTP.new(uri.host, uri.port)
   https.use_ssl = true
   recs_request = Net::HTTP::Get.new(uri.path, initheader = headers)
-  recs_result = https.request(recs_request)
-  bitches = JSON.parse(recs_result.body)
-  bitches
+  response = https.request(recs_request)
+  response_hash = JSON.parse(response.body)
+  response_hash
+end
+
+# Get a list of the bitches
+def list_bitches(base_uri, headers)
+  uri = URI.parse(base_uri + "user/recs")
+  get_call(uri, headers)
 end
 
 def autolike(bitches, base_uri, headers)
@@ -69,6 +74,7 @@ def autolike(bitches, base_uri, headers)
   https.use_ssl = true
   like_request = Net::HTTP::Get.new(uri.path, initheader = headers)
   like_result = https.request(like_request)
+  # get_call(uri, headers)
   puts _id + " " + name + " " + like_result.body
   # Execute inserts with parameter markers
   db.execute("INSERT INTO bitches (tinder_id, name, bio, birth_date, profile_pics, liked_date)

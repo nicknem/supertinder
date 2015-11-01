@@ -5,6 +5,15 @@ require 'net/https'
 require 'json'
 require 'uri'
 
+def get_call(uri, headers)
+  https = Net::HTTP.new(uri.host, uri.port)
+  https.use_ssl = true
+  recs_request = Net::HTTP::Get.new(uri.path, initheader = headers)
+  response = https.request(recs_request)
+  response_hash = JSON.parse(response.body)
+  response_hash
+end
+
 # Open the database
 def open_database
   # Check if the database exists
@@ -44,16 +53,6 @@ def tinder_auth(fb_token, fb_id, base_uri)
   x_auth_token
 end
 
-
-def get_call(uri, headers)
-  https = Net::HTTP.new(uri.host, uri.port)
-  https.use_ssl = true
-  recs_request = Net::HTTP::Get.new(uri.path, initheader = headers)
-  response = https.request(recs_request)
-  response_hash = JSON.parse(response.body)
-  response_hash
-end
-
 # Get a list of the bitches
 def list_bitches(base_uri, headers)
   uri = URI.parse(base_uri + "user/recs")
@@ -63,24 +62,20 @@ end
 def autolike(bitches, base_uri, headers)
   db = open_database
   bitches['results'].each do |bitch|
-  _id = bitch['_id']
-  name = bitch['name']
-  bio = bitch['bio']
-  birth_date = bitch['birth_date']
-  profile_pics = bitch['photos'][0]['processedFiles'][0]['url']
-  liked_date = Time.now.to_s
-  uri = URI.parse(base_uri + "like/" + _id)
-  https = Net::HTTP.new(uri.host, uri.port)
-  https.use_ssl = true
-  like_request = Net::HTTP::Get.new(uri.path, initheader = headers)
-  like_result = https.request(like_request)
-  # get_call(uri, headers)
-  puts _id + " " + name + " " + like_result.body
-  # Execute inserts with parameter markers
-  db.execute("INSERT INTO bitches (tinder_id, name, bio, birth_date, profile_pics, liked_date)
-            VALUES (?, ?, ?, ?, ?, ?)", [_id, name, bio, birth_date, profile_pics, liked_date])
-  sleep 0.5
+    # Useful data on bitches
+    _id = bitch['_id']
+    name = bitch['name']
+    bio = bitch['bio']
+    birth_date = bitch['birth_date']
+    profile_pics = bitch['photos'][0]['processedFiles'][0]['url']
+    liked_date = Time.now.to_s
+    uri = URI.parse(base_uri + "like/" + _id)
+    # Get call to like bitches
+    like_result = get_call(uri, headers)
+    puts _id + " " + name + " " + like_result.to_s
+    # Insert bitches in the database
+    db.execute("INSERT INTO bitches (tinder_id, name, bio, birth_date, profile_pics, liked_date)
+              VALUES (?, ?, ?, ?, ?, ?)", [_id, name, bio, birth_date, profile_pics, liked_date])
+    sleep 0.5
   end
 end
-
-

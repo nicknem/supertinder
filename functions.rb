@@ -5,14 +5,6 @@ require 'net/https'
 require 'json'
 require 'uri'
 
-def get_call(uri, headers)
-  https = Net::HTTP.new(uri.host, uri.port)
-  https.use_ssl = true
-  recs_request = Net::HTTP::Get.new(uri.path, initheader = headers)
-  response = https.request(recs_request)
-  response_hash = JSON.parse(response.body)
-  response_hash
-end
 
 # Open the database
 def open_database
@@ -49,8 +41,21 @@ def tinder_auth(fb_token, fb_id, base_uri)
     )
   # get the tinder token and return it
   response_hash = JSON.parse(response.body)
-  x_auth_token = response_hash["token"]
-  x_auth_token
+  response_hash["token"]
+end
+
+def get_call(uri, headers)
+  https = Net::HTTP.new(uri.host, uri.port)
+  https.use_ssl = true
+  recs_request = Net::HTTP::Get.new(uri.path, initheader = headers)
+  response = https.request(recs_request)
+  response_hash = JSON.parse(response.body)
+  response_hash
+end
+
+def get_updates(headers)
+  uri = URI.parse("https://api.gotinder.com/updates")
+  get_call(uri, headers)
 end
 
 # Get a list of the bitches
@@ -72,10 +77,11 @@ def autolike(bitches, base_uri, headers)
     uri = URI.parse(base_uri + "like/" + _id)
     # Get call to like bitches
     like_result = get_call(uri, headers)
-    puts _id + " " + name + " " + like_result.to_s
+    puts "#{_id}- #{name}: #{like_result.to_s}"
     # Insert bitches in the database
     db.execute("INSERT INTO bitches (tinder_id, name, bio, birth_date, profile_pics, liked_date)
               VALUES (?, ?, ?, ?, ?, ?)", [_id, name, bio, birth_date, profile_pics, liked_date])
     sleep 0.5
   end
 end
+

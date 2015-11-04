@@ -85,3 +85,16 @@ def autolike(bitches, base_uri, headers)
   end
 end
 
+def update_profile
+  # Change the profile
+  uri = URI.parse("https://api.gotinder.com/profile")
+  https = Net::HTTP.new(uri.host, uri.port)
+  https.use_ssl = true
+  recs_request = Net::HTTP::Post.new(uri.path, initheader = headers)
+  recs_request.body = {
+    "gender" => 1
+  }.to_json
+  response = https.request(recs_request)
+  puts response.body
+end
+

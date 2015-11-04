@@ -22,15 +22,14 @@ headers = {'User-Agent' => 'Tinder/4.6.1 (iPhone; iOS 9.1; Scale/2.00)',
            'X-Auth-Token' => x_auth_token }
 puts 'Hoes before bros...'
 
-
-# Get a list of updates (WORK IN PROGRESS)
-uri = URI.parse("https://api.gotinder.com/updates")
-https = Net::HTTP.new(uri.host, uri.port)
-https.use_ssl = true
-update_request = Net::HTTP::Post.new(uri.path, initheaders = headers)
-update_request.body = { 'last_activity_date' => '2015-10-01T11:18:53.250Z' }.to_json
-update_response = https.request(update_request)
-puts update_response.body
+# # Get a list of updates (WORK IN PROGRESS)
+# uri = URI.parse("https://api.gotinder.com/updates")
+# https = Net::HTTP.new(uri.host, uri.port)
+# https.use_ssl = true
+# update_request = Net::HTTP::Post.new(uri.path, initheaders = headers)
+# update_request.body = { 'last_activity_date' => '2015-10-01T11:18:53.250Z' }.to_json
+# update_response = https.request(update_request)
+# puts update_response.body
 
 # Autoliker
 while true

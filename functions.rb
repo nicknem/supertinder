@@ -85,7 +85,7 @@ def autolike(bitches, base_uri, headers)
   end
 end
 
-def update_profile
+def update_profile # Not functional
   # Change the profile
   uri = URI.parse("https://api.gotinder.com/profile")
   https = Net::HTTP.new(uri.host, uri.port)

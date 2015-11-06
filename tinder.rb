@@ -4,6 +4,7 @@ require 'net/https'
 require 'json'
 require 'uri'
 require 'watir-webdriver'
+require 'io/console'
 require_relative 'functions'
 
 puts "Welcome to SuperTinder"
@@ -12,26 +13,21 @@ puts "########################"
 # Tinder API
 base_uri = "https://api.gotinder.com/"
 
-
 # -------------
 # Login
 # -------------
 # Ask for credentials
 puts "Type in your Facebook login"
 myLogin = gets.chomp
+
+# Get facebook password without displaying it
 puts 'Type your Facebook password'
-myPassword = gets.chomp
+myPassword = STDIN.noecho(&:gets)
 
 puts '==== FACEBOOK ===='
 puts 'Fetching Facebook data...'
+
 # Fetching your Facebook Tinder token & id using a webdriver
-# Chrome preferences to use it with Watir webdriver
-prefs = {
-  :download => {
-    :prompt_for_download => false,
-    :default_directory => "/Users/antoninarcher/code/nicknem/supertinder/"
-  }
-}
 browser = Watir::Browser.new
 puts 'Fetching your Facebook Tinder token...'
 browser.goto 'https://www.facebook.com/dialog/oauth?client_id=464891386855067&redirect_uri=https://www.facebook.com/connect/login_success.html&scope=basic_info,email,public_profile,user_about_me,user_activities,user_birthday,user_education_history,user_friends,user_interests,user_likes,user_location,user_photos,user_relationship_details&response_type=token'

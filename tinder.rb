@@ -27,25 +27,29 @@ myPassword = STDIN.noecho(&:gets)
 puts '==== FACEBOOK ===='
 puts 'Fetching Facebook data...'
 
-# Fetching your Facebook Tinder token & id using a webdriver
 browser = Watir::Browser.new
-puts 'Fetching your Facebook Tinder token...'
+puts 'Fetching your Facebook token'
+
+# Webdriver
 browser.goto 'https://www.facebook.com/dialog/oauth?client_id=464891386855067&redirect_uri=https://www.facebook.com/connect/login_success.html&scope=basic_info,email,public_profile,user_about_me,user_activities,user_birthday,user_education_history,user_friends,user_interests,user_likes,user_location,user_photos,user_relationship_details&response_type=token'
 browser.text_field(:id => 'email').when_present.set myLogin
 browser.text_field(:id => 'pass').when_present.set myPassword
-browser.button(:name => 'login').when_present.click
+# browser.button(:name => 'login').when_present.click
+fb_token = /#access_token=(.*)&expires_in/.match(browser.url).captures[0]
+puts 'My FB_TOKEN is '+fb_token
 
 puts 'Fetching your Facebook ID...'
-facebook_token = /#access_token=(.*)&expires_in/.match(browser.url).captures[0]
-puts 'My FB_TOKEN is '+facebook_token
-
+# browser.stop
+sleep 2
 browser.goto'https://www.facebook.com/profile.php'
-facebook_id = /fbid=(.*)&set/.match(browser.link(:class =>"profilePicThumb").when_present.href).captures[0]
-puts 'My FB_ID is '+facebook_id
+fb_id = /fbid=(.*)&set/.match(browser.link(:class =>"profilePicThumb").when_present.href).captures[0]
+puts 'My FB_ID is '+fb_id
+
+browser.close
 
 puts 'Asking permission to Zuck to make the world a better place...'
 # Retrieve Tinder token
-x_auth_token = tinder_auth(facebook_token, facebook_id, base_uri)
+x_auth_token = tinder_auth(fb_token, fb_id, base_uri)
 # Headers for Tinder API requests
 headers = {'User-Agent' => 'Tinder/4.6.1 (iPhone; iOS 9.1; Scale/2.00)',
            'Content-Type' => 'application/json',

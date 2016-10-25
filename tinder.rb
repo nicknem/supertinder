@@ -12,7 +12,6 @@ puts "########################"
 
 # Tinder API
 base_uri = "https://api.gotinder.com/"
-
 # -------------
 # Login
 # -------------
@@ -58,8 +57,8 @@ puts 'Hoes before bros...'
 
 # Autoliker
 while true
-  bitches = list_bitches(base_uri, headers)
-  # Loop through all the bitches and like them
-  puts '======== DICKSLAPPING BITCHES ========='
-  autolike(bitches, base_uri, headers)
+  chicks = list_chicks(base_uri, headers)
+  # Loop through all the chicks and like them
+  puts '======== I got hoooooes, (I got hoes!), in every AREA CODE (aaaaareaaaaaa) ========='
+  autolike(chicks, base_uri, headers)
 end

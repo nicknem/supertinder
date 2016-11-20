@@ -28,5 +28,5 @@ while true
   rescue Exception => e
    puts "Something went wrong..."
   end
-  sleep 10000
+  sleep 10
 end

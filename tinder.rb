@@ -12,7 +12,6 @@ BASE_URI = "https://api.gotinder.com/".freeze
 puts "########################"
 puts "Welcome to SuperTinder"
 puts "########################"
-
 puts "Paste in your Facebook ID:"
 fb_token = gets.chomp
 puts 'Paste your Facebook Auth Token:'
@@ -28,5 +27,5 @@ while true
   rescue Exception => e
    puts "Something went wrong..."
   end
-  sleep 10
+  sleep 60
 end

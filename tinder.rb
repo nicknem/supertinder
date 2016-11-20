@@ -7,58 +7,26 @@ require 'watir-webdriver'
 require 'io/console'
 require_relative 'functions'
 
+BASE_URI = "https://api.gotinder.com/".freeze
+
+puts "########################"
 puts "Welcome to SuperTinder"
 puts "########################"
 
-# Tinder API
-base_uri = "https://api.gotinder.com/"
-# -------------
-# Login
-# -------------
-# Ask for credentials
-puts "Type in your Facebook login"
-myLogin = gets.chomp
+puts "Paste in your Facebook ID:"
+fb_token = gets.chomp
+puts 'Paste your Facebook Auth Token:'
+fb_id = gets.chomp
 
-# Get facebook password without displaying it
-puts 'Type your Facebook password'
-myPassword = STDIN.noecho(&:gets)
+x_auth_token = get_tinder_auth_token(fb_token, fb_id, BASE_URI)
+headers = {'User-Agent' => 'Tinder/4.6.1 (iPhone; iOS 9.1; Scale/2.00)', 'Content-Type' => 'application/json', 'X-Auth-Token' => x_auth_token }
 
-puts '==== FACEBOOK ===='
-puts 'Fetching Facebook data...'
-
-browser = Watir::Browser.new
-puts 'Fetching your Facebook token'
-
-# Webdriver
-browser.goto 'https://www.facebook.com/dialog/oauth?client_id=464891386855067&redirect_uri=https://www.facebook.com/connect/login_success.html&scope=basic_info,email,public_profile,user_about_me,user_activities,user_birthday,user_education_history,user_friends,user_interests,user_likes,user_location,user_photos,user_relationship_details&response_type=token'
-browser.text_field(:id => 'email').when_present.set myLogin
-browser.text_field(:id => 'pass').when_present.set myPassword
-# browser.button(:name => 'login').when_present.click
-fb_token = /#access_token=(.*)&expires_in/.match(browser.url).captures[0]
-puts 'My FB_TOKEN is '+fb_token
-
-puts 'Fetching your Facebook ID...'
-# browser.stop
-sleep 2
-browser.goto'https://www.facebook.com/profile.php'
-fb_id = /fbid=(.*)&set/.match(browser.link(:class =>"profilePicThumb").when_present.href).captures[0]
-puts 'My FB_ID is '+fb_id
-
-browser.close
-
-puts 'Asking permission to Zuck to make the world a better place...'
-# Retrieve Tinder token
-x_auth_token = tinder_auth(fb_token, fb_id, base_uri)
-# Headers for Tinder API requests
-headers = {'User-Agent' => 'Tinder/4.6.1 (iPhone; iOS 9.1; Scale/2.00)',
-           'Content-Type' => 'application/json',
-           'X-Auth-Token' => x_auth_token }
-puts 'Hoes before bros...'
-
-# Autoliker
 while true
-  chicks = list_chicks(base_uri, headers)
-  # Loop through all the chicks and like them
-  puts '======== I got hoooooes, (I got hoes!), in every AREA CODE (aaaaareaaaaaa) ========='
-  autolike(chicks, base_uri, headers)
+  begin
+    chicks = list_chicks(BASE_URI, headers)
+    autolike(chicks, BASE_URI, headers)
+  rescue Exception => e
+   puts "Something went wrong..."
+  end
+  sleep 10000
 end

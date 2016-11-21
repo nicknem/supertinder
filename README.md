@@ -8,6 +8,7 @@ SuperTinder automatically 'right-swipe's girls on Tinder and records their detai
 
 ```
 git clone https://github.com/benbristow/supertinder
+cd supertinder
 bundle install
 ruby tinder.rb
 ```

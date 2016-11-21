@@ -2,7 +2,7 @@
 
 ## What it is
 
-SuperTinder is a fun and simple Ruby script which goal is to enable AB testing on Tinder (and to help you increase your dating metrics).
+SuperTinder automatically 'right-swipe's girls on Tinder and records their details in an SQLite database as it does it.
 
 ## Getting Started
 
